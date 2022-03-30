@@ -50,13 +50,15 @@ class simulator:
 
         self.capital = self.capital + sell_amount # 잔고 업데이트
 
-        if (n_shares - n_shares_sell) == 0: #if sold all
+        if (n_shares - n_shares_sell) == 0: # if sold all, 매도할 주식이 없으면
+            # 매매내역(매수, 매도 내역)
             self.history.append([stock, buy_price, n_shares, sell_price, buy_date, sell_date])
+            # 매수내역 삭제
             del self.buy_orders[stock]
         else:
-            n_shares = n_shares - n_shares_sell
-            self.buy_orders[stock][1] = n_shares
-            self.buy_orders[stock][2] = buy_price * n_shares
+            n_shares = n_shares - n_shares_sell # 홀딩 주식수 계산
+            self.buy_orders[stock][1] = n_shares # 보유 주식 업데이트
+            self.buy_orders[stock][2] = buy_price * n_shares # 매수 금액 업데이트
 
     def buy_percentage(self, buy_price, buy_perc = 1):
         """
@@ -71,12 +73,14 @@ class simulator:
     def trailing_stop_loss(self):
         """
         activates a trailing stop loss
+        # 손절
         """
         pass
     
     def print_bag(self):
         """
         print current stocks holding
+        보유 주식 정보 출력
         """
         print ("{:<10} {:<10} {:<10} {:<10}".format('STOCK', 'BUY PRICE', 'SHARES', 'TOTAL VALUE'))
         for key, value in self.buy_orders.items():
@@ -86,6 +90,7 @@ class simulator:
     def create_summary(self, print_results = False):
         """
         create summary
+        요약정보 생성
         """
         if print_results:
             print ("{:<10} {:<10} {:<10} {:<10} {:<10}".format('STOCK', 'BUY PRICE', 'SHARES', 'SELL PRICE', 'NET GAIN'))    
@@ -102,6 +107,7 @@ class simulator:
     def print_summary(self):
         """
         prints the summary of results
+        요약정보 출력
         """
         self.create_summary(print_results = True)
         print('\n')
