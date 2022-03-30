@@ -13,7 +13,7 @@ class simulator:
         self.capital = capital # 잔고
         self.initial_capital = capital # 초기 투자금
         self.total_gain = 0 # 손익??
-        self.buy_orders = {} # 매수 주문
+        self.buy_orders = {} # 매수 주문 이력을 저장한다.
         self.history = [] # 거래 내역 저장?? 히스토리 저장, 아직 정체를 모름??
 
         # 판다스에 히스토리 저장
@@ -60,6 +60,9 @@ class simulator:
             self.buy_orders[stock][1] = n_shares # 보유 주식 업데이트
             self.buy_orders[stock][2] = buy_price * n_shares # 매수 금액 업데이트
 
+    """
+    매수 가능 수량을 계산한다.
+    """
     def buy_percentage(self, buy_price, buy_perc = 1):
         """
         this function determines how much capital to spend on the stock and returns the number of shares
