@@ -10,11 +10,15 @@ class simulator:
     특별이 거래내역정보는 별도의 데이터 프레임으로 저장한다.
     """
     def __init__(self, capital):
-        self.capital = capital # 잔고
+        self.capital = capital # 현금 잔고
         self.initial_capital = capital # 초기 투자금
         self.total_gain = 0 # 손익??
-        self.buy_orders = {} # 매수 주문 이력을 저장한다.
-        self.history = [] # 거래 내역 저장?? 히스토리 저장, 아직 정체를 모름??
+        self.buy_orders = {} # 매수 주식 잔고(종목명: [매수가, 수량, 매수 금액, 날짜])
+        self.history = [] # 최종 매도 히스토리 저장([종목명, 매수가, 매도수량, 매도가, 매수일, 매도일])
+        """
+        self.history의 문제점, 일부 물량을 매도하면 history에 내역이 저장되지 않고, 전체 물량을 매도해야 이력이 생김
+        일부 물량 매도시 현금 잔고와 보유 주식 물량을 변경 시키나 내역을 생성되지 않는다.
+        """
 
         # 판다스에 히스토리 저장
         # 하스토리에서 관리하는 칼럼명
@@ -50,6 +54,13 @@ class simulator:
 
         self.capital = self.capital + sell_amount # 잔고 업데이트
 
+        """
+        전량을 매도하면
+        
+
+        일부를 매도하면
+        잔고(capital) 증가, 보유 주식수 차감, 매수금액 업데이트
+        """
         if (n_shares - n_shares_sell) == 0: # if sold all, 매도할 주식이 없으면
             # 매매내역(매수, 매도 내역)
             self.history.append([stock, buy_price, n_shares, sell_price, buy_date, sell_date])
@@ -99,6 +110,7 @@ class simulator:
             print ("{:<10} {:<10} {:<10} {:<10} {:<10}".format('STOCK', 'BUY PRICE', 'SHARES', 'SELL PRICE', 'NET GAIN'))    
         
         for values in self.history:
+            # (매도가 - 매수가) * 수량
             net_gain = (values[3] - values[1]) * values[2]
             self.total_gain += net_gain
             self.history_df = self.history_df.append({'stock': values[0], 'buy_price': values[1], 'n_shares': values[2], 'sell_price': values[3]\
@@ -119,3 +131,32 @@ class simulator:
         print(f'Total gain: {self.total_gain:.2f}')
         print(f'P/L : {(self.total_gain/self.initial_capital)*100:.2f} %')
         print('\n')
+
+    def print_status(self):
+        print('\n')
+        print(f'self.capital: {self.capital:.2f}')
+        print(f'self.initial_capital: {self.initial_capital:.2f}')
+        print(f'self.total_gain: {self.total_gain:.2f}')
+        print(f'self.buy_orders: {self.buy_orders}')
+        print(f'self.history: {self.history}')
+        print(f'self.history_df: {self.history_df}')
+        print('\n')
+
+#-------------------
+# 이슈
+# 매수 전량을 매도하지 않는 경우 정상적으로 수익률 계산이 이루어 지지 않는다.
+# 일부 물량을 매도한 경우 현금성 잔고와 보율 물량 정보만 업데이터 됨(buy_oreders)
+#-------------------
+# s1 = simulator(100_000)
+# s1.print_status()
+# 매수
+# s1.buy('A',1000,'2022-04-01')
+# s1.print_status()
+# 일부 물량 매도
+# s1.sell('A',1500,10,'2022-04-01')
+# 전량 매도
+# s1.sell('A',2000,90,'2022-04-01')
+# s1.print_status()
+# 수익률 현황 출력
+# s1.print_summary()
+# s1.history_df
