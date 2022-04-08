@@ -6,7 +6,8 @@
 ![](https://miro.medium.com/max/622/1*Hp-v16ZQbei_bAyvXE2KAw.png)
 
 ## Loggers
-모든 loggers 파이썬 프로그램 내에서는 global이다.
+- 모든 logger 파이썬 프로그램 내에서는 global이다.
+- logger의 핵심 역활은 LogRecords를 handler로 전송하는 것이다.
 
 ```python
 # app.py
@@ -27,6 +28,30 @@ import logging
 # 적용범위는 global
 logger = logging.getLogger(__name__)
 ```
+
+## Handlers(standalone objects)
+- 핸들러의 역활은 LogRecords를 어디로 보낼지를 결정한다.
+- 핸들러의 종류는 다양
+
+```python
+# LogRecord 정보를 ieddit.log 파일로 저장
+# 모든 로깅 정보를 기록하므로 로거 파일 용량 이슈가 발생할 여지가 있다.
+logger = logging.getLogger(__name__)
+fileHandle = logging.FileHandler('ieddit.log')
+logger.addHandler(fileHandle)
+
+
+# setLevel 기능을 이용해서 로깅할 LogRecord를 필터링 할 수 있다.
+logger = logging.getLogger(__name__)
+fileHandle = logging.FileHandler('ieddit.log')
+fileHandle.setLevel(logging.WARNING)
+logger.addHandler(fileHandle)
+
+logger.info("This won't show in ieddit.log")
+logger.error("This will show.")
+```
+
+
 
 # Logging Utils
 
