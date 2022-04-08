@@ -10,9 +10,22 @@
 
 ```python
 # app.py
+# logger 인스턴스 생성
+# logger 인스터스 이름은 app이다.
+# 적용범위는 global
 import logging
 logger = logging.getLogger("app")
 
+
+
+# 아래는 개선된 코드
+# 각 파일별로 유닉한 logger를 가질수 있다.???
+# app.py
+import logging
+# logger 인스턴스 생성
+# logger 인스터스 이름은 app이다.
+# 적용범위는 global
+logger = logging.getLogger(__name__)
 ```
 
 # Logging Utils
