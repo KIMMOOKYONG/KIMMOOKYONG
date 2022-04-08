@@ -70,6 +70,42 @@ logger.info("Message")
 
 ```
 
+## QueueHandler and QueueListener
+- 프로그램에서 로깅 메시지를 출력하면, 로깅 처리가 완료 될 때까지 프로그램 기다려야하는데
+- 별도의 쓰레스로 실행되는 QueueHandler, QueueListener를 사용하면 기다리지 않아도 된다.
+- QueueListener - > QueueHandler
+
+```python
+# run.py
+import logging_util
+import logging
+from queue import Queue
+
+# Initialize Logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.WARNING)
+fileHandle = logging.FileHandler('ieddit.log')
+queueHandle = logging_util.QueueListenerHandler(
+                                     queue=Queue(-1), 
+                                     handlers=[fileHandle])
+logger.warning("Ack!")
+
+# 아래는 처리 알고리즘 설명
+Warning Log Record Created
+   |
+   V
+Log record added to QueueHandler on separate thread
+ -> Main program is no longer blocked
+   |
+   V
+QueueListener picks up the log and hands it to the other handlers for processing
+   |
+   V
+Other handlers format the message and output appropriately
+
+```
+
+
 
 # Logging Utils
 
