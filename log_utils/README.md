@@ -1,3 +1,20 @@
+# Python’s built-in logging tools
+개발 작업에서 디버깅 전략은 매우 매우 중요하다. 특히 논리적인 오류 잡아야하는 경우와 백엔드 개발의 경우
+discord channel로 에러 메시지 출력 기능
+
+# loggers and handlers 
+![](https://miro.medium.com/max/622/1*Hp-v16ZQbei_bAyvXE2KAw.png)
+
+## Loggers
+모든 loggers 파이썬 프로그램 내에서는 global이다.
+
+```python
+# app.py
+import logging
+logger = logging.getLogger("app")
+
+```
+
 # Logging Utils
 
 These logging utilities create default loggers for all of the files. The configuration is stored on a static config file logger_config.yaml. 
