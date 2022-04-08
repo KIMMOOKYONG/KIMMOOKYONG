@@ -1,6 +1,6 @@
 # Python’s built-in logging tools
-개발 작업에서 디버깅 전략은 매우 매우 중요하다. 특히 논리적인 오류 잡아야하는 경우와 백엔드 개발의 경우
-discord channel로 에러 메시지 출력 기능
+- 개발 작업에서 디버깅 전략은 매우 매우 중요하다. 특히 논리적인 오류 잡아야하는 경우와 백엔드 개발의 경우
+- discord channel로 에러 메시지 출력 기능
 
 # loggers and handlers 
 ![](https://miro.medium.com/max/622/1*Hp-v16ZQbei_bAyvXE2KAw.png)
