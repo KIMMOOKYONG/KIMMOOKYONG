@@ -51,6 +51,24 @@ logger.info("This won't show in ieddit.log")
 logger.error("This will show.")
 ```
 
+## Formatters
+- Where, what, why, when, and how 등의 부가적인 정보를 생성한다.
+
+```python
+# logger 생성
+logger = logging.getLogger("__main__")
+consoleHandle = logging.StreamHandler()
+consoleHandle.setLevel(logging.INFO)
+
+# Setup the formatter
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+consoleHandle.setFormatter(formatter)
+logger.addHandler(consoleHandle)
+logger.info("Message")
+
+# 2019-10-25 00:01:42,283 - 모듈명 - INFO - Message
+
+```
 
 
 # Logging Utils
