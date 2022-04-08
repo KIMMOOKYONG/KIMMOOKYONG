@@ -105,6 +105,102 @@ Other handlers format the message and output appropriately
 
 ```
 
+## Custom Discord Handler
+```python
+class DiscordHandler(logging.Handler):
+    """
+    Custom handler to send certain logs to Discord
+    """
+    def __init__(self):
+        logging.Handler.__init__(self)
+        self.discordWebhook = DiscordWebhook(url=config.DISCORD_URL)
+
+    def emit(self, record):
+        """
+        sends a message to discord
+        """
+        desc = [
+            record.message,
+            record.exc_info,
+            str(record.funcName) + " : " + str(record.lineno),
+            record.stack_info
+            ]
+
+        filteredDesc = [record for record in desc if record != None]
+
+        embed = DiscordEmbed(
+            title=record.levelname,
+            description="\n".join(filteredDesc),
+            color=16711680)
+        self.discordWebhook.add_embed(embed)
+        self.discordWebhook.execute()
+```
+
+## Using a File to Initialize Loggers
+### logger 환경설정
+```yaml
+# Logger Config.yaml
+version: 1
+objects:
+  queue:
+    class: queue.Queue
+    maxsize: 1000
+formatters:
+  simple:
+    format: '%(asctime)s - %(levelname)s - %(name)s - %(message)s'
+handlers:
+  discord:
+    class: utilities.log_utils.logger_util.DiscordHandler
+    level: ERROR
+    formatter: simple
+  queue_listener:
+    class: utilities.log_utils.logger_util.QueueListenerHandler
+    handlers:
+      - cfg://handlers.console
+      - cfg://handlers.file
+      - cfg://handlers.discord
+    queue: cfg://objects.queue
+loggers:
+  __main__:
+    level: WARNING
+    handlers:
+      - queue_listener
+    propagate: false
+  ieddit:
+    level: WARNING
+    handlers:
+      - queue_listener
+    propagate: false
+```
+
+### 활용예시
+```python
+# logger_init.py
+import os
+import config
+# Setup For Logging Init
+import yaml
+import logging
+import utilities.log_utils.logger_util
+# Pull in Logging Config
+with open('logger_config.yaml', 'r') as stream:
+  try:
+    logging_config = yaml.load(stream, Loader=yaml.SafeLoader)
+  except yaml.YAMLError as exc:
+    print("Error Loading Logger Config")
+    pass
+# Load Logging configs
+logging.config.dictConfig(logging_config)
+```
+
+```python
+# run.py
+import logging
+import logger_init # Only call at the top file in 
+import logging
+logger = logging.getLogger("__main__")
+logger.warning("Woohoo I am Logging!")
+```
 
 
 # Logging Utils
