@@ -1,5 +1,5 @@
 ## TODO
-![조금 더 체계적인 Python Logging](https://hwangheek.github.io/2019/python-logging/)
+!(https://hwangheek.github.io/2019/python-logging/)
 
 ## 인사말
 
